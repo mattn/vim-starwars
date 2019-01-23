@@ -1,9 +1,10 @@
-let s:file = expand('<sfile>:h:h') . '/resources/sw1.txt'
-function! s:play() abort
+let s:dir = expand('<sfile>:h:h') . '/resources/'
+function! s:play(...) abort
+  let l:ep = get(a:000, 0, 1)
   echomsg 'Loading...'
   let l:height = 13
   let l:frames = []
-  let l:lines = readfile(s:file)
+  let l:lines = readfile(printf('%s/sw%d.txt', s:dir, l:ep))
   for l:i in range(0, len(l:lines)-1, l:height+1)
     if l:i%(l:height+1) == 0
       let l:duration = 0 + l:lines[i]
@@ -34,4 +35,4 @@ function! s:play() abort
   bw!
 endfunction
 
-command -nargs=0 StarWars call s:play()
+command -nargs=? StarWars call s:play(<f-args>)
