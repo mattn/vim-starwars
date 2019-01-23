@@ -4,7 +4,7 @@ function! s:play() abort
   let l:height = 13
   let l:frames = []
   let l:lines = readfile(s:file)
-  for l:i in range(len(l:lines))
+  for l:i in range(0, len(l:lines)-1, l:height+1)
     if l:i%(l:height+1) == 0
       let l:duration = 0 + l:lines[i]
       call add(l:frames, {'lines': l:lines[l:i+1 : i+l:height], 'duration': l:duration})
