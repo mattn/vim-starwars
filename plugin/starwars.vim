@@ -17,9 +17,9 @@ function! s:play() abort
   let l:speed = 15
   for l:frame in l:frames
     call setline(1, l:frame['lines'])
+    redraw!
     let l:duration = max([l:frame['duration'] * 1000 / l:speed, 1])
     exe printf('sleep %dms', l:duration)
-    redraw!
     let l:key = getchar(0)
     if l:key == 106
       if l:speed > 1
