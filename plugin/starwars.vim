@@ -1,7 +1,12 @@
 let s:dir = expand('<sfile>:h:h') . '/resources/'
 function! s:play(...) abort
-  let l:ep = get(a:000, 0, 1)
+  if has("patch-8.1.1453")
+    let l:ep = a:1
+  else
+    let l:ep = get(a:000, 0, 1)
+  endif
   echomsg 'Loading...'
+  echomsg l:ep
   let l:height = 13
   let l:frames = []
   let l:lines = readfile(printf('%s/sw%d.txt', s:dir, l:ep))
@@ -35,4 +40,43 @@ function! s:play(...) abort
   bw!
 endfunction
 
-command -nargs=? StarWars call s:play(<f-args>)
+function! s:popup_menu_update(wid, ctx) abort
+  let l:buf = winbufnr(a:wid)
+  let l:menu = map(copy(a:ctx.menu), '(v:key == a:ctx.select ? "→" : "  ") .. v:val')
+  call setbufline(l:buf, 1, l:menu)
+endfunction
+
+function! s:popup_filter(ctx, wid, c) abort
+  if a:c ==# 'j'
+    let a:ctx.select += a:ctx.select ==# len(a:ctx.menu)-1 ? 0 : 1
+    call s:popup_menu_update(s:wid, a:ctx)
+  elseif a:c ==# 'k'
+    let a:ctx.select -= a:ctx.select ==# 0 ? 0 : 1
+    call s:popup_menu_update(s:wid, a:ctx)
+  elseif a:c ==# "\n" || a:c ==# "\r" || a:c ==# ' '
+    call popup_close(a:wid)
+    call s:play(a:ctx.menu[a:ctx.select])
+  endif
+endfunction
+
+function! s:show_popup(menu) abort
+  let l:ctx = {'select': 0, 'menu': a:menu}
+  let s:wid = popup_create(a:menu, {
+        \ 'border': [1,1,1,1],
+        \ 'filter': function('s:popup_filter', [l:ctx]),
+        \})
+  call s:popup_menu_update(s:wid, l:ctx)
+endfunction
+
+function! starwars#selectepsode() abort
+  if has("patch-8.1.1453")
+    call s:show_popup([
+          \'1',
+          \'2',
+          \])
+  else
+    call s:play(<f-args>)
+  endif
+endfunction
+
+command -nargs=? StarWars call starwars#selectepsode()
