@@ -6,7 +6,6 @@ function! s:play(...) abort
     let l:ep = get(a:000, 0, 1)
   endif
   echomsg 'Loading...'
-  echomsg l:ep
   let l:height = 13
   let l:frames = []
   let l:lines = readfile(printf('%s/sw%d.txt', s:dir, l:ep))
