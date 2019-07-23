@@ -1,3 +1,5 @@
+scriptencoding utf-8
+
 let s:dir = expand('<sfile>:h:h') . '/resources/'
 function! s:play(...) abort
   if has("patch-8.1.1453")
@@ -68,14 +70,14 @@ function! s:show_popup(menu) abort
 endfunction
 
 function! starwars#selectepsode() abort
-  if has("patch-8.1.1453")
-    call s:show_popup([
-          \'1',
-          \'2',
-          \])
-  else
-    call s:play(<f-args>)
-  endif
+  call s:show_popup([
+        \'1',
+        \'2',
+        \])
 endfunction
 
-command -nargs=? StarWars call starwars#selectepsode()
+if has("patch-8.1.1453")
+  command -nargs=0 StarWars call starwars#selectepsode()
+else
+  command -nargs=? StarWars call s:play(<f-args>)
+endif
