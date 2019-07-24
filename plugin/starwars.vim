@@ -69,7 +69,7 @@ function! s:show_popup(menu) abort
   call s:popup_menu_update(s:wid, l:ctx)
 endfunction
 
-function! starwars#selectepsode() abort
+function! starwars#selectepisode() abort
   call s:show_popup([
         \'1',
         \'2',
@@ -77,7 +77,7 @@ function! starwars#selectepsode() abort
 endfunction
 
 if has("patch-8.1.1453")
-  command -nargs=0 StarWars call starwars#selectepsode()
+  command -nargs=0 StarWars call starwars#selectepisode()
 else
   command -nargs=? StarWars call s:play(<f-args>)
 endif
