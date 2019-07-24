@@ -2,11 +2,7 @@ scriptencoding utf-8
 
 let s:dir = expand('<sfile>:h:h') . '/resources/'
 function! s:play(...) abort
-  if has("patch-8.1.1453")
-    let l:ep = a:1
-  else
-    let l:ep = get(a:000, 0, 1)
-  endif
+  let l:ep = get(a:000, 0, 1)
   echomsg 'Loading...'
   let l:height = 13
   let l:frames = []
