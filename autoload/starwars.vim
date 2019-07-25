@@ -4,8 +4,7 @@ let s:dir = expand('<sfile>:h:h') . '/resources/'
 let s:episodes = map(glob(s:dir . '/*.txt', 1, 1), 'fnamemodify(v:val, ":t:r")')
 
 function! starwars#play(...) abort
-	echomsg string(a:000)
-  if len(a:000) == 0 && exists('*popup_create')
+  if a:0 == 0 && exists('*popup_create')
     call s:show_popup(s:episodes)
     return
   endif
