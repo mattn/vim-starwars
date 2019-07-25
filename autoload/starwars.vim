@@ -1,16 +1,19 @@
 scriptencoding utf-8
 
 let s:dir = expand('<sfile>:h:h') . '/resources/'
+let s:episodes = map(glob(s:dir . '/*.txt', 1, 1), 'fnamemodify(v:val, ":t:r")')
 
 function! starwars#play(...) abort
+	echomsg string(a:000)
   if len(a:000) == 0 && exists('*popup_create')
-    return starwars#selectepisode()
+    call s:show_popup(s:episodes)
+    return
   endif
   let l:ep = get(a:000, 0, 1)
   echomsg 'Loading...'
   let l:height = 13
   let l:frames = []
-  let l:lines = readfile(printf('%s/sw%d.txt', s:dir, l:ep))
+  let l:lines = readfile(printf('%s/%s.txt', s:dir, l:ep))
   for l:i in range(0, len(l:lines)-1, l:height+1)
     if l:i%(l:height+1) == 0
       let l:duration = 0 + l:lines[i]
@@ -56,7 +59,7 @@ function! s:popup_filter(ctx, wid, c) abort
     call s:popup_menu_update(s:wid, a:ctx)
   elseif a:c ==# "\n" || a:c ==# "\r" || a:c ==# ' '
     call popup_close(a:wid)
-    call s:play(a:ctx.menu[a:ctx.select])
+    call starwars#play(a:ctx.menu[a:ctx.select])
   elseif a:c ==# "\x1b"
     call popup_close(a:wid)
     return 0
@@ -73,10 +76,9 @@ function! s:show_popup(menu) abort
   call s:popup_menu_update(s:wid, l:ctx)
 endfunction
 
-function! starwars#selectepisode() abort
-  call s:show_popup([
-        \'1',
-        \'2',
-        \])
+function! starwars#menu() abort
 endfunction
 
+function! starwars#complete(arglead, cmdline, cursorpos)
+  return filter(copy(s:episodes), 'stridx(v:val, a:arglead)==0')
+endfunction
