@@ -8,7 +8,7 @@ function! starwars#play(...) abort
     call s:show_popup(s:episodes)
     return
   endif
-  let l:ep = get(a:000, 0, 1)
+  let l:ep = a:1
   echomsg 'Loading...'
   let l:height = 13
   let l:frames = []
