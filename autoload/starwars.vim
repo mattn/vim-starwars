@@ -4,15 +4,24 @@ let s:dir = expand('<sfile>:h:h') . '/resources/'
 let s:episodes = map(glob(s:dir . '/*.txt', 1, 1), 'fnamemodify(v:val, ":t:r")')
 
 function! starwars#play(...) abort
-  if a:0 == 0 && exists('*popup_create')
-    call s:show_popup(s:episodes)
-    return
+  if a:0 == 0
+    if exists('*popup_create')
+      call s:show_popup(s:episodes)
+      return
+    else
+      let l:ep = inputlist(s:episodes)
+    endif
+  else
+    let l:ep = a:1
   endif
-  let l:ep = a:1
-  echomsg 'Loading...'
   let l:height = 13
   let l:frames = []
-  let l:lines = readfile(printf('%s/%s.txt', s:dir, l:ep))
+  let l:filename = printf('%s/%s.txt', s:dir, l:ep)
+  if !filereadable(l:filename)
+    return
+  endif
+  echomsg 'Loading...'
+  let l:lines = readfile(l:filename)
   for l:i in range(0, len(l:lines)-1, l:height+1)
     if l:i%(l:height+1) == 0
       let l:duration = 0 + l:lines[i]
