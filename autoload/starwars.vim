@@ -57,7 +57,11 @@ function! s:popup_filter(ctx, wid, c) abort
   elseif a:c ==# "\n" || a:c ==# "\r" || a:c ==# ' '
     call popup_close(a:wid)
     call s:play(a:ctx.menu[a:ctx.select])
+  elseif a:c ==# "\x1b"
+    call popup_close(a:wid)
+    return 0
   endif
+  return 1
 endfunction
 
 function! s:show_popup(menu) abort
