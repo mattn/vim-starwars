@@ -10,6 +10,10 @@ function! starwars#play(...) abort
       return
     else
       let l:ep = inputlist(s:episodes)
+      if l:ep == 0
+        return
+      endif
+      let l:ep = 'sw' . l:ep
     endif
   else
     let l:ep = a:1

@@ -10,10 +10,10 @@ StarWars on Vim
 :StarWars
 ```
 
-Specify episode number
+Specify episode
 
 ```
-:StarWars 1
+:StarWars sw1
 ```
 
 ## Episodes
